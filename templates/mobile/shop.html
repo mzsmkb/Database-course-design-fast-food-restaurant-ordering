@@ -1,0 +1,61 @@
+{% extends 'mobile/base.html' %}
+{% load static from staticfiles %}
+
+{% block mainbody %}
+<!--头部-->
+	<header>
+		<div class="header">
+			<h1>切换店铺</h1>
+			<a href="{% url 'mobile_index' %}" class="return"><i></i></a>
+		</div>
+	</header>
+
+	<!--内容区-->
+	<article class="main-container">
+
+		<!--产品-->
+		<div class="list-content cartlist order-Pro">
+			<ul>
+				{% for vo in shoplist %}
+				<li class="line select">
+					<a href="{% url 'mobile_selectshop' %}?sid={{vo.id}}">
+					<div class="pro-img"><img src="/static/uploads/shop/{{ vo.cover_pic }}" alt=""></div>
+					<div class="pro-con"><h3>{{ vo.name }}</h3><p>电话：{{ vo.phone }}</p><p>{{ vo.address }}</p></div>
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+	</article>
+{% endblock %}
+
+
+
+{% block myjavascript %}
+
+<script type="text/javascript">
+	$("button:contains('点击获取')").click(function(){
+		bt = $(this);
+		if(bt.html() != "点击获取"){
+			return;
+		}
+		var phone = $("#name").val();
+		//$.get();
+		bt = $(this);
+		var t=60;
+		bt.html(t+"秒")
+		var mytime = setInterval(function(){
+			t= t-1;
+			bt.html(t+"秒")
+			if(t <= 0){
+				clearInterval(mytime)
+				bt.html("点击获取");
+			}
+		},1000);
+
+	});
+</script>
+{% endblock %}
+
+

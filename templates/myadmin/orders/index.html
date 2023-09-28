@@ -1,0 +1,104 @@
+{% extends 'myadmin/base.html' %}
+{% load static from staticfiles %}
+
+{% block main_body %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        会员管理
+        <small>订餐系统后台管理</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">会员管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">会员信息表</h3>
+
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-striped">
+                        <tr>
+                            <th width="60">订单号</th>
+<!--                            <th>会员</th>-->
+                            <th>操作员</th>
+                            <th>金额</th>
+                            <th>付款方式</th>
+                            <th>订单状态</th>
+                            <th>支付状态</th>
+                            <th>下单时间</th>
+                        </tr>
+                        {% for vo in orderslist %}
+                        <tr class="oid{{vo.id}}">
+                            <td>{{ vo.id }}</td>
+<!--                            <td>{{vo.nickname}}</td>-->
+                            <td>{{request.session.webuser.nickname}}</td>
+                            <td class="price">{{vo.money}}</td>
+                            <td>微信</td>
+                            <td>
+                                {% if vo.status == 1 %}
+                                  <span style="color:green">制作中</span>
+                                {% elif vo.status == 2 %}
+                                  <span style="color:red">无效</span>
+                                {% elif vo.status == 3 %}
+                                  <span style="color:red">已完成</span>
+                                {% else %}
+                                  <span style="color:red">未知状态</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if vo.payment_status == 1 %}
+                                  <span style="color:red">未支付</span>
+                                {% elif vo.payment_status == 2 %}
+                                  <span style="color:green">已支付</span>
+                                {% elif vo.payment_status == 3 %}
+                                  <span style="color:red">已退款</span>
+                                {% else %}
+                                  <span style="color:red">未知状态</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ vo.create_at|date:'Y-m-d H:i:s' }}</td>
+
+                        </tr>
+                        {% endfor %}
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="panel-footer" style="height:50px">
+                    <div style="width:120px;float:left;margin:5px 0px;">合计：<span style="color:red;font-weight:bold;">{{maxpages}}</span> 页</div>
+                    <nav aria-label="Page navigation" class="text-right">
+                      <ul class="pagination" style="margin:0px;">
+                        <li><a href="{% url 'myadmin_orders_index' pIndex|add:-1 %}"><span aria-hidden="true">&laquo;</span></a></li>
+                        {% for p in plist %}
+                          <li {% if pIndex == p %}class="active"{% endif %}><a href="{% url 'myadmin_orders_index' p %}">{{ p }}</a></li>
+                        {% endfor %}
+                        <li><a href="{% url 'myadmin_orders_index' pIndex|add:1 %}"><span aria-hidden="true">&raquo;</span></a></li>
+                      </ul>
+                    </nav>
+                </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+{% endblock %}
